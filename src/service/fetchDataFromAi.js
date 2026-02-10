@@ -23,6 +23,11 @@ export const generateProductDetails = async (productName, productCategory) => {
       "quality item",
     ],
   };
+// console.log(
+//   "OpenRouter key:",
+//   import.meta.env.VITE_OPENROUTER_API_KEY?.slice(0, 10),
+// );
+
 
   const extractJSON = (text = "") =>
     text
@@ -35,10 +40,13 @@ export const generateProductDetails = async (productName, productCategory) => {
       "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-        },
+   headers: {
+  Authorization: `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+  "Content-Type": "application/json",
+  "HTTP-Referer": "http://localhost:5173", // or your site URL
+  "X-Title": "Ecommerce Product Generator",
+},
+
         body: JSON.stringify({
           model: "tngtech/deepseek-r1t2-chimera:free",
           temperature: 0.2,
@@ -70,6 +78,7 @@ STRICT RULES:
 
     const data = await response.json();
     const raw = data?.choices?.[0]?.message?.content;
+// console.log(data);
 
     if (!raw) return fallback;
 
